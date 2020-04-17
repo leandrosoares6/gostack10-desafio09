@@ -150,7 +150,7 @@ export default function Deliveries() {
                     <div>
                       <img
                         src={
-                          delivery.deliveryman.avatar?.url ||
+                          delivery.deliveryman?.avatar?.url ||
                           `https://ui-avatars.com/api/?name=${delivery.deliveryman.name}`
                         }
                         alt={delivery.deliveryman.name}

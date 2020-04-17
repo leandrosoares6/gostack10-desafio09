@@ -10,6 +10,8 @@ import {
 
 import api from '~/services/api';
 
+import CreateForm from './CreateForm';
+
 import {
   Container,
   Content,
@@ -22,6 +24,7 @@ import {
 
 export default function Deliverymen() {
   const [visible, setVisible] = useState(false);
+  const [toogleView, setToogleView] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   // const [perPage, setPerPage] = useState(6);
@@ -48,12 +51,20 @@ export default function Deliverymen() {
     setVisible(!visible);
   }
 
+  function handleToggleComponent() {
+    setToogleView(!toogleView);
+  }
+
   function handlePreviousPage() {
     setPage(page - 1);
   }
 
   function handleNextPage() {
     setPage(page + 1);
+  }
+
+  if (toogleView) {
+    return <CreateForm />;
   }
 
   return (
@@ -69,7 +80,7 @@ export default function Deliverymen() {
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <button type="button">
+          <button type="button" onClick={handleToggleComponent}>
             <div className="add">
               <MdAdd size={20} color="FFF" />
               <span>CADASTRAR</span>
