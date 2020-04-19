@@ -114,7 +114,6 @@ export const DeliveryTable = styled.table`
 
     div {
       display: flex;
-      align-items: center;
 
       img {
         width: 25px;
@@ -133,13 +132,13 @@ export const DeliveryTable = styled.table`
 `;
 
 export const MoreContainer = styled.div`
-  padding: 10px;
   display: flex;
   flex-direction: column;
+  padding: 10px;
 
   > div {
     display: flex;
-    align-items: center;
+    align-items: left;
     padding-bottom: 6px;
 
     button {
@@ -160,7 +159,6 @@ export const MoreContainer = styled.div`
 
     :nth-last-child(-n + 2) {
       padding-top: 6px;
-      border-top: 1px solid #eee;
     }
 
     :nth-last-child(1) {

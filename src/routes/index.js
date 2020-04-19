@@ -5,8 +5,7 @@ import Route from './Route';
 import SignIn from '../pages/SignIn';
 
 import Deliveries from '../pages/Deliveries';
-import DeliveryAdd from '../pages/Deliveries/CreateForm';
-import DeliveryUpdate from '../pages/Deliveries/UpdateForm';
+import DeliveryForm from '../pages/Deliveries/Form';
 
 import Deliverymen from '../pages/Deliverymen';
 import DeliverymanAdd from '../pages/Deliverymen/CreateForm';
@@ -29,13 +28,13 @@ export default function Routes() {
       <Route
         path="/deliveries/delivery"
         exact
-        component={DeliveryAdd}
+        component={DeliveryForm}
         isPrivate
       />
       <Route
         path="/deliveries/delivery/:id"
         exact
-        component={DeliveryUpdate}
+        component={DeliveryForm}
         isPrivate
       />
 

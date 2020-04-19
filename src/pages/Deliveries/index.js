@@ -37,6 +37,18 @@ export default function Deliveries() {
   const [limit, setLimit] = useState(6);
   const [deliveries, setDeliveries] = useState([]);
 
+  async function updateDeliveries() {
+    const response = await api.get('deliveries', {
+      params: {
+        page,
+        q: search,
+      },
+    });
+
+    setDeliveries(response.data.rows);
+    setLimit(response.data.count);
+  }
+
   useEffect(() => {
     async function loadDeliveries() {
       const response = await api.get('deliveries', {
@@ -98,10 +110,10 @@ export default function Deliveries() {
   }
 
   async function handleDelete(id) {
-    const confirm = window.confirm('Você tem certeza que deseja deletar isso?');
+    // eslint-disable-next-line no-alert
+    const confirm = window.confirm('Deseja realmente excluir a encomenda?');
 
     if (!confirm) {
-      toast.error('Encomenda não apagada!');
       return;
     }
 
@@ -109,6 +121,7 @@ export default function Deliveries() {
       await api.delete(`/deliveries/${id}`);
 
       toast.success('Encomenda apagada com sucesso!');
+      await updateDeliveries();
     } catch (err) {
       toast.error('Essa encomenda não pode ser deletada!');
     }
