@@ -6,8 +6,6 @@ export const Container = styled.div`
   max-width: 1100px;
   margin: 0 auto;
   height: 80vh;
-  /* height: auto !important;
-  min-height: 80vh; */
 
   span {
     margin: 40px 0 30px 0;
@@ -80,96 +78,100 @@ export const Content = styled.div`
 export const DeliveryTable = styled.table`
   position: relative;
 
-  thead th {
-    font-size: 13px;
-    color: #444;
-    text-align: left;
-    padding: 12px;
-  }
+  thead {
+    th {
+      font-size: 13px;
+      color: #444;
+      text-align: left;
+      padding: 12px;
+    }
 
-  thead th.actions {
-    text-align: center;
+    .actions {
+      text-align: right;
+    }
   }
 
   tbody {
     position: relative;
-  }
 
-  tbody tr {
-    position: relative;
-    font-size: 13px;
-    color: #666;
-    background: #fff;
-  }
+    tr {
+      position: relative;
+      font-size: 13px;
+      color: #666;
+      background: #fff;
+    }
 
-  tbody tr.divisor {
-    position: relative;
-    background: #f5f5f5;
-    height: 10px;
-  }
+    .divisor {
+      position: relative;
+      background: #f5f5f5;
+      height: 10px;
+    }
 
-  tbody td {
-    position: relative;
-    padding: 12px;
-  }
+    td {
+      position: relative;
+      padding: 12px;
+    }
 
-  tbody td.actions {
-    position: relative;
-    text-align: center;
-  }
+    div {
+      display: flex;
+      align-items: center;
 
-  tbody div {
+      img {
+        width: 25px;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      span {
+        margin: 0;
+        font-size: 13px;
+        font-weight: normal;
+        color: #666;
+      }
+    }
+  }
+`;
+
+export const MoreContainer = styled.div`
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+
+  > div {
     display: flex;
-    flex-direction: row;
     align-items: center;
+    padding-bottom: 6px;
 
-    img {
-      width: 25px;
-      border-radius: 50%;
-      margin-right: 10px;
+    button {
+      background: none;
+      border: none;
+
+      display: flex;
+    }
+
+    svg {
+      margin-right: 8px;
     }
 
     span {
-      margin: 0;
-      font-size: 13px;
-      font-weight: normal;
-      color: #666;
+      font-size: 16px;
+      color: #999;
     }
-  }
-`;
 
-export const Badge = styled.button`
-  background: none;
-  border: 0;
-  position: relative;
-`;
+    :nth-last-child(-n + 2) {
+      padding-top: 6px;
+      border-top: 1px solid #eee;
+    }
 
-export const DeliveryOptions = styled.div`
-  position: absolute;
-  width: 130px;
-  left: calc(50% - 65px);
-  top: calc(100% + 30px);
-  background: #fff;
-  border-radius: 4px;
-  padding: 15px 5px;
-  display: ${props => (props.visible ? 'block' : 'none')};
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: calc(50% - 20px);
-    top: -20px;
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 20px solid #fff;
+    :nth-last-child(1) {
+      padding-bottom: 0;
+    }
   }
 `;
 
 export const CanceledStatus = styled.div`
   width: 100px;
-  height: 22px;
+  height: 20px;
   align-items: center;
   justify-content: center;
   background: #fab0b0;

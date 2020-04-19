@@ -3,20 +3,25 @@ import React, { useState, useEffect } from 'react';
 import {
   MdSearch,
   MdAdd,
-  MdMoreHoriz,
   MdChevronLeft,
   MdChevronRight,
+  MdEdit,
+  MdDeleteForever,
 } from 'react-icons/md';
-import api from '~/services/api';
+import { toast } from 'react-toastify';
 
-import CreateForm from './CreateForm';
+import More from '~/components/More';
+
+import api from '~/services/api';
+import history from '~/services/history';
+
+import DeliveryView from './DeliveryView';
 
 import {
   Container,
   Content,
   DeliveryTable,
-  Badge,
-  // DeliveryOptions,
+  MoreContainer,
   CanceledStatus,
   DeliveredStatus,
   WithdrawalStatus,
@@ -27,11 +32,8 @@ import {
 } from './styles';
 
 export default function Deliveries() {
-  const [visible, setVisible] = useState(false);
-  const [toogleView, setToogleView] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  // const [perPage, setPerPage] = useState(6);
   const [limit, setLimit] = useState(6);
   const [deliveries, setDeliveries] = useState([]);
 
@@ -50,10 +52,6 @@ export default function Deliveries() {
 
     loadDeliveries();
   }, [page, search]);
-
-  function handleToggleVisible() {
-    setVisible(!visible);
-  }
 
   function handlePreviousPage() {
     setPage(page - 1);
@@ -99,12 +97,21 @@ export default function Deliveries() {
     }
   }
 
-  function handleToggleComponent() {
-    setToogleView(!toogleView);
-  }
+  async function handleDelete(id) {
+    const confirm = window.confirm('Você tem certeza que deseja deletar isso?');
 
-  if (toogleView) {
-    return <CreateForm />;
+    if (!confirm) {
+      toast.error('Encomenda não apagada!');
+      return;
+    }
+
+    try {
+      await api.delete(`/deliveries/${id}`);
+
+      toast.success('Encomenda apagada com sucesso!');
+    } catch (err) {
+      toast.error('Essa encomenda não pode ser deletada!');
+    }
   }
 
   return (
@@ -120,7 +127,10 @@ export default function Deliveries() {
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <button type="button" onClick={handleToggleComponent}>
+          <button
+            type="button"
+            onClick={() => history.push('/deliveries/delivery')}
+          >
             <div className="add">
               <MdAdd size={20} color="FFF" />
               <span>CADASTRAR</span>
@@ -161,16 +171,36 @@ export default function Deliveries() {
                   <td>{delivery.recipient.city}</td>
                   <td>{delivery.recipient.state}</td>
                   <td>{translateStatus(delivery.status)}</td>
-                  <td className="actions">
-                    <Badge onClick={handleToggleVisible}>
-                      <MdMoreHoriz color="c6c6c6" size={15} />
-                    </Badge>
-
-                    {/* <DeliveryOptions visible={visible}>
-                    <button type="button">Visualizar</button>
-                    <button type="button">Editar</button>
-                    <button type="button">Excluir</button>
-                  </DeliveryOptions> */}
+                  <td>
+                    <More>
+                      <MoreContainer>
+                        <div>
+                          <DeliveryView data={delivery} />
+                        </div>
+                        <div>
+                          <button
+                            onClick={() =>
+                              history.push(
+                                `/deliveries/delivery/${delivery.id}`
+                              )
+                            }
+                            type="button"
+                          >
+                            <MdEdit color="4D85EE" size={15} />
+                            <span>Editar</span>
+                          </button>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => handleDelete(delivery.id)}
+                            type="button"
+                          >
+                            <MdDeleteForever color="DE3B3B" size={15} />
+                            <span>Excluir</span>
+                          </button>
+                        </div>
+                      </MoreContainer>
+                    </More>
                   </td>
                 </tr>
                 <tr className="divisor" />

@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { Container, HeaderItems, SelectContainer, SelectInput } from './styles';
 
 import api from '~/services/api';
+import history from '~/services/history';
 
 export default function CreateForm() {
   const [deliverymenOptions, setDeliverymenOptions] = useState([]);
@@ -88,16 +89,12 @@ export default function CreateForm() {
     setRecipientPlaceholder(e.label);
   }
 
-  function handleReturnButton() {
-    window.location.reload();
-  }
-
   return (
     <Container>
       <HeaderItems>
         <span>Cadastro de encomendas</span>
         <div>
-          <button type="button" onClick={handleReturnButton}>
+          <button type="button" onClick={() => history.push('/deliveries')}>
             <div>
               <MdChevronLeft size={20} color="FFF" />
               <span>VOLTAR</span>
