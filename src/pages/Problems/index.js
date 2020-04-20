@@ -12,7 +12,7 @@ import {
   ButtonNextPage,
 } from './styles';
 
-export default function Deliveries() {
+export default function Problems() {
   const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(1);
   // const [perPage, setPerPage] = useState(6);

@@ -3,32 +3,45 @@ import React, { useState, useEffect } from 'react';
 import {
   MdSearch,
   MdAdd,
-  MdMoreHoriz,
   MdChevronLeft,
   MdChevronRight,
+  MdEdit,
+  MdDeleteForever,
 } from 'react-icons/md';
-import api from '~/services/api';
+import { toast } from 'react-toastify';
 
-import CreateForm from './CreateForm';
+import More from '~/components/More';
+
+import api from '~/services/api';
+import history from '~/services/history';
 
 import {
   Container,
   Content,
   RecipientTable,
-  Badge,
+  MoreContainer,
   Pagination,
   ButtonPreviousPage,
   ButtonNextPage,
 } from './styles';
 
-export default function Problems() {
-  const [visible, setVisible] = useState(false);
-  const [toogleView, setToogleView] = useState(false);
+export default function Recipients() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  // const [perPage, setPerPage] = useState(6);
   const [limit, setLimit] = useState(6);
   const [recipients, setRecipients] = useState([]);
+
+  async function updateRecipients() {
+    const response = await api.get('recipients', {
+      params: {
+        page,
+        q: search,
+      },
+    });
+
+    setRecipients(response.data.rows);
+    setLimit(response.data.count);
+  }
 
   useEffect(() => {
     async function loadProblems() {
@@ -46,10 +59,6 @@ export default function Problems() {
     loadProblems();
   }, [page, search]);
 
-  function handleToggleVisible() {
-    setVisible(!visible);
-  }
-
   function handlePreviousPage() {
     setPage(page - 1);
   }
@@ -58,12 +67,22 @@ export default function Problems() {
     setPage(page + 1);
   }
 
-  function handleToggleComponent() {
-    setToogleView(!toogleView);
-  }
+  async function handleDelete(id) {
+    // eslint-disable-next-line no-alert
+    const confirm = window.confirm('Deseja realmente excluir o detinatário?');
 
-  if (toogleView) {
-    return <CreateForm />;
+    if (!confirm) {
+      return;
+    }
+
+    try {
+      await api.delete(`/recipients/${id}`);
+
+      toast.success('Destinatário apagado com sucesso!');
+      await updateRecipients();
+    } catch (err) {
+      toast.error('Esse destinatário não pode ser deletado!');
+    }
   }
 
   return (
@@ -79,7 +98,10 @@ export default function Problems() {
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <button type="button" onClick={handleToggleComponent}>
+          <button
+            type="button"
+            onClick={() => history.push('/recipients/recipient')}
+          >
             <div className="add">
               <MdAdd size={20} color="FFF" />
               <span>CADASTRAR</span>
@@ -105,16 +127,33 @@ export default function Problems() {
                   <td>
                     {`${recipient.street}, ${recipient.number}, ${recipient.city} - ${recipient.state}`}
                   </td>
-                  <td className="actions">
-                    <Badge onClick={handleToggleVisible}>
-                      <MdMoreHoriz color="c6c6c6" size={15} />
-                    </Badge>
-
-                    {/* <DeliveryOptions visible={visible}>
-                    <button type="button">Visualizar</button>
-                    <button type="button">Editar</button>
-                    <button type="button">Excluir</button>
-                  </DeliveryOptions> */}
+                  <td>
+                    <More>
+                      <MoreContainer>
+                        <div>
+                          <button
+                            onClick={() =>
+                              history.push(
+                                `/recipients/recipient/${recipient.id}`
+                              )
+                            }
+                            type="button"
+                          >
+                            <MdEdit color="4D85EE" size={15} />
+                            <span>Editar</span>
+                          </button>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => handleDelete(recipient.id)}
+                            type="button"
+                          >
+                            <MdDeleteForever color="DE3B3B" size={15} />
+                            <span>Excluir</span>
+                          </button>
+                        </div>
+                      </MoreContainer>
+                    </More>
                   </td>
                 </tr>
                 <tr className="divisor" />

@@ -12,7 +12,7 @@ import { Container, HeaderItems } from './styles';
 import api from '~/services/api';
 import history from '~/services/history';
 
-export default function UpdateForm({ match }) {
+export default function DeliverymanForm({ match }) {
   const { id } = match.params;
   const [avatarValue, setAvatarValue] = useState('');
   const [nameValue, setNameValue] = useState('');
@@ -113,7 +113,7 @@ export default function UpdateForm({ match }) {
   );
 }
 
-UpdateForm.propTypes = {
+DeliverymanForm.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,

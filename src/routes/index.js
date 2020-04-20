@@ -11,8 +11,7 @@ import Deliverymen from '../pages/Deliverymen';
 import DeliverymanForm from '../pages/Deliverymen/Form';
 
 import Recipients from '../pages/Recipients';
-import RecipientAdd from '../pages/Recipients/CreateForm';
-import RecipientUpdate from '../pages/Recipients/UpdateForm';
+import RecipientForm from '../pages/Recipients/Form';
 
 import Problems from '../pages/Problems';
 // import Profile from '../pages/Profile';
@@ -50,11 +49,17 @@ export default function Routes() {
         isPrivate
       />
 
-      <Route path="/recipients" component={Recipients} isPrivate />
-      <Route path="/recipients/recipient" component={RecipientAdd} isPrivate />
+      <Route path="/recipients" exact component={Recipients} isPrivate />
+      <Route
+        path="/recipients/recipient"
+        exact
+        component={RecipientForm}
+        isPrivate
+      />
       <Route
         path="/recipients/recipient/:id"
-        component={RecipientUpdate}
+        exact
+        component={RecipientForm}
         isPrivate
       />
 

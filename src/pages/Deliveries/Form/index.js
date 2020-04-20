@@ -9,7 +9,7 @@ import { Container, HeaderItems, SelectContainer, SelectInput } from './styles';
 import api from '~/services/api';
 import history from '~/services/history';
 
-export default function UpdateForm({ match }) {
+export default function DeliveryForm({ match }) {
   const { id } = match.params;
 
   const [deliverymenOptions, setDeliverymenOptions] = useState([]);
@@ -177,7 +177,7 @@ export default function UpdateForm({ match }) {
   );
 }
 
-UpdateForm.propTypes = {
+DeliveryForm.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string,

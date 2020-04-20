@@ -6,10 +6,8 @@ export const Container = styled.div`
   max-width: 1100px;
   margin: 0 auto;
   height: 80vh;
-  /* height: auto !important;
-  min-height: 80vh; */
 
-  span {
+  > span {
     margin: 40px 0 30px 0;
     font-size: 20px;
     font-weight: bold;
@@ -80,77 +78,87 @@ export const Content = styled.div`
 export const RecipientTable = styled.table`
   position: relative;
 
-  thead th {
-    font-size: 13px;
-    color: #444;
-    text-align: left;
-    padding: 12px;
-  }
+  thead {
+    th {
+      font-size: 13px;
+      color: #444;
+      text-align: left;
+      padding: 12px;
+    }
 
-  thead th.actions {
-    text-align: center;
+    .actions {
+      text-align: right;
+    }
   }
 
   tbody {
     position: relative;
-  }
 
-  tbody tr {
-    position: relative;
-    font-size: 13px;
-    color: #666;
-    background: #fff;
-  }
+    tr {
+      position: relative;
+      font-size: 13px;
+      color: #666;
+      background: #fff;
+    }
 
-  tbody tr.divisor {
-    position: relative;
-    background: #f5f5f5;
-    height: 10px;
-  }
+    .divisor {
+      position: relative;
+      background: #f5f5f5;
+      height: 10px;
+    }
 
-  tbody td {
-    position: relative;
-    padding: 12px;
-  }
+    td {
+      position: relative;
+      padding: 12px;
+    }
 
-  tbody td.actions {
-    position: relative;
-    text-align: center;
-  }
+    .actions {
+      position: relative;
+      text-align: center;
+    }
 
-  tbody img {
-    width: 25px;
-    border-radius: 50%;
-    margin-right: 10px;
+    img {
+      width: 25px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
   }
 `;
 
-export const Badge = styled.button`
-  background: none;
-  border: 0;
-  position: relative;
-`;
+export const MoreContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
 
-export const DeliveryOptions = styled.div`
-  position: absolute;
-  width: 130px;
-  left: calc(50% - 65px);
-  top: calc(100% + 30px);
-  background: #fff;
-  border-radius: 4px;
-  padding: 15px 5px;
-  display: ${props => (props.visible ? 'block' : 'none')};
+  > div {
+    display: flex;
+    align-items: left;
+    padding-bottom: 6px;
 
-  &::before {
-    content: '';
-    position: absolute;
-    left: calc(50% - 20px);
-    top: -20px;
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 20px solid #fff;
+    button {
+      background: none;
+      border: none;
+
+      display: flex;
+    }
+
+    svg {
+      margin-right: 8px;
+    }
+
+    span {
+      font-size: 16px;
+      font-weight: normal;
+      color: #999;
+    }
+
+    :nth-last-child(-n + 2) {
+      padding-top: 6px;
+    }
+
+    :nth-last-child(1) {
+      padding-bottom: 0;
+    }
   }
 `;
 

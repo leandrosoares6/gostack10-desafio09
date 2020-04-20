@@ -138,7 +138,6 @@ export default function Deliverymen() {
                   <td>
                     <More>
                       <MoreContainer>
-                        <div>{/* <DeliveryView data={delivery} /> */}</div>
                         <div>
                           <button
                             onClick={() =>

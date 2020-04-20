@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import { MdChevronLeft, MdDone } from 'react-icons/md';
 import { Form, Input } from '@rocketseat/unform';
+
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import InputMask from '~/components/InputMask';
@@ -9,8 +11,11 @@ import InputMask from '~/components/InputMask';
 import { Container, HeaderItems } from './styles';
 
 import api from '~/services/api';
+import history from '~/services/history';
 
-export default function CreateForm() {
+export default function RecipientForm({ match }) {
+  const { id } = match.params;
+
   const [complementValue, setComplementValue] = useState('');
   const [nameValue, setNameValue] = useState('');
   const [zipValue, setZipValue] = useState('');
@@ -18,6 +23,33 @@ export default function CreateForm() {
   const [numberValue, setNumberValue] = useState('');
   const [cityValue, setCityValue] = useState('');
   const [stateValue, setStateValue] = useState('');
+
+  useEffect(() => {
+    async function loadInitialData(recipientId) {
+      if (id) {
+        const response = await api.get(`/recipients/${recipientId}`);
+
+        const {
+          name,
+          zip_code,
+          street,
+          number,
+          complement,
+          city,
+          state,
+        } = response.data;
+
+        setNameValue(name);
+        setZipValue(zip_code);
+        setStreetValue(street);
+        setNumberValue(number);
+        setComplementValue(complement);
+        setCityValue(city);
+        setStateValue(state);
+      }
+    }
+    loadInitialData(id);
+  }, [id]);
 
   function clearAllInputs() {
     setNameValue('');
@@ -37,33 +69,56 @@ export default function CreateForm() {
     city,
     state,
   }) {
-    const response = await api
-      .post('recipients', {
-        name,
-        zip_code: zipValue,
-        street,
-        number,
-        complement,
-        city,
-        state,
-      })
-      .catch(err => {
-        const error = { ...err };
-        if (error.response.status === 400) {
-          toast.error('Erro de validação. Verifique seus dados!');
-        } else {
-          toast.error('Erro interno na aplicação. Tente novamente mais tarde.');
-        }
-      });
+    const zipValueFormatted = zipValue.replace(/-/, '');
+    let response = {};
 
+    if (id) {
+      response = await api
+        .put(`recipients/${id}`, {
+          name,
+          zip_code: zipValueFormatted,
+          street,
+          number,
+          complement,
+          city,
+          state,
+        })
+        .catch(err => {
+          const error = { ...err };
+          if (error.response.status === 400) {
+            toast.error('Erro de validação. Verifique seus dados!');
+          } else {
+            toast.error(
+              'Erro interno na aplicação. Tente novamente mais tarde.'
+            );
+          }
+        });
+    } else {
+      response = await api
+        .post('recipients', {
+          name,
+          zip_code: zipValueFormatted,
+          street,
+          number,
+          complement,
+          city,
+          state,
+        })
+        .catch(err => {
+          const error = { ...err };
+          if (error.response.status === 400) {
+            toast.error('Erro de validação. Verifique seus dados!');
+          } else {
+            toast.error(
+              'Erro interno na aplicação. Tente novamente mais tarde.'
+            );
+          }
+        });
+    }
     if (response) {
       toast.success('Destinatário cadastrado com sucesso!');
       clearAllInputs();
     }
-  }
-
-  function handleReturnButton() {
-    window.location.reload();
   }
 
   async function handleBlur(e) {
@@ -89,38 +144,7 @@ export default function CreateForm() {
       }
       setCityValue(localidade);
       setStateValue(uf);
-
-      const zipValueFormatted = zipValue.replace(/-/, '');
-      setZipValue(zipValueFormatted);
     }
-  }
-
-  function handleNameChange(e) {
-    setNameValue(e.target.value);
-  }
-
-  function handleZipChange(e) {
-    setZipValue(e.target.value);
-  }
-
-  function handleComplementChange(e) {
-    setComplementValue(e.target.value);
-  }
-
-  function handleStreetChange(e) {
-    setStreetValue(e.target.value);
-  }
-
-  function handleNumberChange(e) {
-    setNumberValue(e.target.value);
-  }
-
-  function handleCityChange(e) {
-    setCityValue(e.target.value);
-  }
-
-  function handleStateChange(e) {
-    setStateValue(e.target.value);
   }
 
   return (
@@ -128,7 +152,7 @@ export default function CreateForm() {
       <HeaderItems>
         <span>Cadastro de destinatários</span>
         <div>
-          <button type="button" onClick={handleReturnButton}>
+          <button type="button" onClick={() => history.push('/recipients')}>
             <div>
               <MdChevronLeft size={20} color="FFF" />
               <span>VOLTAR</span>
@@ -148,7 +172,7 @@ export default function CreateForm() {
           <Input
             name="name"
             value={nameValue}
-            onChange={handleNameChange}
+            onChange={e => setNameValue(e.target.value)}
             placeholder="Ludwing van Beethoven"
           />
         </div>
@@ -157,7 +181,7 @@ export default function CreateForm() {
             <span>CEP</span>
             <InputMask
               value={zipValue}
-              onChange={handleZipChange}
+              onChange={e => setZipValue(e.target.value)}
               name="zip_code"
               mask="99999-999"
               maskChar={null}
@@ -170,7 +194,7 @@ export default function CreateForm() {
             <Input
               name="street"
               value={streetValue}
-              onChange={handleStreetChange}
+              onChange={e => setStreetValue(e.target.value)}
               placeholder="Rua Beethoven"
             />
           </div>
@@ -179,7 +203,7 @@ export default function CreateForm() {
             <Input
               name="number"
               value={numberValue}
-              onChange={handleNumberChange}
+              onChange={e => setNumberValue(e.target.value)}
               placeholder="1729"
             />
           </div>
@@ -190,7 +214,7 @@ export default function CreateForm() {
             <Input
               name="complement"
               value={complementValue}
-              onChange={handleComplementChange}
+              onChange={e => setComplementValue(e.target.value)}
             />
           </div>
           <div className="input">
@@ -198,7 +222,7 @@ export default function CreateForm() {
             <Input
               name="city"
               value={cityValue}
-              onChange={handleCityChange}
+              onChange={e => setCityValue(e.target.value)}
               placeholder="Teresina"
             />
           </div>
@@ -207,7 +231,7 @@ export default function CreateForm() {
             <Input
               name="state"
               value={stateValue}
-              onChange={handleStateChange}
+              onChange={e => setStateValue(e.target.value)}
               placeholder="Piauí"
             />
           </div>
@@ -216,3 +240,11 @@ export default function CreateForm() {
     </Container>
   );
 }
+
+RecipientForm.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }).isRequired,
+  }).isRequired,
+};
