@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
 
-import { MdMoreHoriz, MdChevronLeft, MdChevronRight } from 'react-icons/md';
+import { MdChevronLeft, MdChevronRight, MdDeleteForever } from 'react-icons/md';
+
+import { toast } from 'react-toastify';
+
+import More from '~/components/More';
+import Modal from '~/components/Modal';
+
 import api from '~/services/api';
 
 import {
   Container,
   ProblemTable,
-  Badge,
   Pagination,
   ButtonPreviousPage,
   ButtonNextPage,
+  MoreContainer,
+  ModalContainer,
 } from './styles';
 
 export default function Problems() {
-  const [visible, setVisible] = useState(false);
   const [page, setPage] = useState(1);
-  // const [perPage, setPerPage] = useState(6);
   const [limit, setLimit] = useState(6);
   const [problems, setProblems] = useState([]);
 
@@ -34,16 +39,22 @@ export default function Problems() {
     loadDeliverymen();
   }, [page]);
 
-  function handleToggleVisible() {
-    setVisible(!visible);
-  }
-
   function handlePreviousPage() {
     setPage(page - 1);
   }
 
   function handleNextPage() {
     setPage(page + 1);
+  }
+
+  async function handleCancel(id) {
+    try {
+      await api.delete(`/problems/${id}`);
+
+      toast.success('Encomenda cancelada com sucesso!');
+    } catch (err) {
+      toast.error('Essa encomenda não pode ser cancelada!');
+    }
   }
 
   return (
@@ -67,15 +78,32 @@ export default function Problems() {
                   <td>#0{problem.delivery_id}</td>
                   <td>{problem.description}</td>
                   <td className="actions">
-                    <Badge onClick={handleToggleVisible}>
-                      <MdMoreHoriz color="c6c6c6" size={15} />
-                    </Badge>
-
-                    {/* <DeliveryOptions visible={visible}>
-                    <button type="button">Visualizar</button>
-                    <button type="button">Editar</button>
-                    <button type="button">Excluir</button>
-                  </DeliveryOptions> */}
+                    <More
+                      contentStyle={{
+                        width: '200px',
+                        borderRadius: '4px',
+                      }}
+                    >
+                      <MoreContainer>
+                        <div>
+                          <Modal>
+                            <ModalContainer>
+                              <strong>VISUALIZAR PROBLEMA</strong>
+                              <p>{problem.description}</p>
+                            </ModalContainer>
+                          </Modal>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => handleCancel(problem.id)}
+                            type="button"
+                          >
+                            <MdDeleteForever color="red" size={15} />
+                            <span>Cancelar encomenda</span>
+                          </button>
+                        </div>
+                      </MoreContainer>
+                    </More>
                   </td>
                 </tr>
                 <tr className="divisor" />

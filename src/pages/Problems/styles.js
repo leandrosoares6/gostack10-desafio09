@@ -6,10 +6,8 @@ export const Container = styled.div`
   max-width: 1100px;
   margin: 0 auto;
   height: 80vh;
-  /* height: auto !important;
-  min-height: 80vh; */
 
-  span {
+  > span {
     margin: 40px 0 30px 0;
     font-size: 20px;
     font-weight: bold;
@@ -20,77 +18,48 @@ export const Container = styled.div`
 export const ProblemTable = styled.table`
   position: relative;
 
-  thead th {
-    font-size: 13px;
-    color: #444;
-    text-align: left;
-    padding: 12px;
-  }
+  thead {
+    th {
+      font-size: 13px;
+      color: #444;
+      text-align: left;
+      padding: 12px;
+    }
 
-  thead th.actions {
-    text-align: center;
+    .actions {
+      text-align: right;
+    }
   }
 
   tbody {
-    position: relative;
-  }
+    tr {
+      position: relative;
+      font-size: 13px;
+      color: #666;
+      background: #fff;
+    }
 
-  tbody tr {
-    position: relative;
-    font-size: 13px;
-    color: #666;
-    background: #fff;
-  }
+    .divisor {
+      position: relative;
+      background: #f5f5f5;
+      height: 10px;
+    }
 
-  tbody tr.divisor {
-    position: relative;
-    background: #f5f5f5;
-    height: 10px;
-  }
+    td {
+      position: relative;
+      padding: 12px;
+    }
 
-  tbody td {
-    position: relative;
-    padding: 12px;
-  }
+    .actions {
+      position: relative;
+      text-align: center;
+    }
 
-  tbody td.actions {
-    position: relative;
-    text-align: center;
-  }
-
-  tbody img {
-    width: 25px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-`;
-
-export const Badge = styled.button`
-  background: none;
-  border: 0;
-  position: relative;
-`;
-
-export const DeliveryOptions = styled.div`
-  position: absolute;
-  width: 130px;
-  left: calc(50% - 65px);
-  top: calc(100% + 30px);
-  background: #fff;
-  border-radius: 4px;
-  padding: 15px 5px;
-  display: ${props => (props.visible ? 'block' : 'none')};
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: calc(50% - 20px);
-    top: -20px;
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 20px solid #fff;
+    img {
+      width: 25px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
   }
 `;
 
@@ -134,5 +103,56 @@ export const ButtonNextPage = styled.button.attrs(props => ({
   &[disabled] {
     cursor: not-allowed;
     opacity: 0.6;
+  }
+`;
+
+export const MoreContainer = styled.div`
+  padding: 10px;
+
+  > div {
+    display: flex;
+    align-items: center;
+
+    button {
+      background: none;
+      border: none;
+
+      display: flex;
+    }
+
+    svg {
+      margin-right: 8px;
+    }
+
+    span {
+      font-size: 14px;
+      color: #999;
+    }
+  }
+
+  > div:first-child {
+    padding-bottom: 9px;
+  }
+
+  div:nth-last-child(1) {
+    padding-top: 9px;
+  }
+`;
+
+export const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 25px;
+
+  strong {
+    color: #444;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  p {
+    font-size: 16px;
+    color: #666;
+    line-height: 26px;
   }
 `;
