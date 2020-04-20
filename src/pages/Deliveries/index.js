@@ -170,7 +170,7 @@ export default function Deliveries() {
                   <td>#0{delivery.id}</td>
                   <td>{delivery.recipient.name}</td>
                   <td>
-                    <div>
+                    <div className="avatar">
                       <img
                         src={
                           delivery.deliveryman?.avatar?.url ||

@@ -7,7 +7,7 @@ export const Container = styled.div`
   margin: 0 auto;
   height: 80vh;
 
-  span {
+  > span {
     margin: 40px 0 30px 0;
     font-size: 20px;
     font-weight: bold;
@@ -114,6 +114,11 @@ export const DeliveryTable = styled.table`
 
     div {
       display: flex;
+    }
+
+    .avatar {
+      display: flex;
+      align-items: center;
 
       img {
         width: 25px;
@@ -121,7 +126,7 @@ export const DeliveryTable = styled.table`
         margin-right: 10px;
       }
 
-      span {
+      > span {
         margin: 0;
         font-size: 13px;
         font-weight: normal;

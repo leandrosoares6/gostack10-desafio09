@@ -3,33 +3,45 @@ import React, { useState, useEffect } from 'react';
 import {
   MdSearch,
   MdAdd,
-  MdMoreHoriz,
   MdChevronLeft,
   MdChevronRight,
+  MdEdit,
+  MdDeleteForever,
 } from 'react-icons/md';
+import { toast } from 'react-toastify';
+
+import More from '~/components/More';
 
 import api from '~/services/api';
-
-import CreateForm from './CreateForm';
+import history from '~/services/history';
 
 import {
   Container,
   Content,
   DeliverymenTable,
-  Badge,
+  MoreContainer,
   Pagination,
   ButtonPreviousPage,
   ButtonNextPage,
 } from './styles';
 
 export default function Deliverymen() {
-  const [visible, setVisible] = useState(false);
-  const [toogleView, setToogleView] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  // const [perPage, setPerPage] = useState(6);
   const [limit, setLimit] = useState(6);
   const [deliverymen, setDeliverymen] = useState([]);
+
+  async function updateDeliverymen() {
+    const response = await api.get('deliverymen', {
+      params: {
+        page,
+        q: search,
+      },
+    });
+
+    setDeliverymen(response.data.rows);
+    setLimit(response.data.count);
+  }
 
   useEffect(() => {
     async function loadDeliverymen() {
@@ -47,14 +59,6 @@ export default function Deliverymen() {
     loadDeliverymen();
   }, [page, search]);
 
-  function handleToggleVisible() {
-    setVisible(!visible);
-  }
-
-  function handleToggleComponent() {
-    setToogleView(!toogleView);
-  }
-
   function handlePreviousPage() {
     setPage(page - 1);
   }
@@ -63,8 +67,22 @@ export default function Deliverymen() {
     setPage(page + 1);
   }
 
-  if (toogleView) {
-    return <CreateForm />;
+  async function handleDelete(id) {
+    // eslint-disable-next-line no-alert
+    const confirm = window.confirm('Deseja realmente excluir o entregador?');
+
+    if (!confirm) {
+      return;
+    }
+
+    try {
+      await api.delete(`/deliverymen/${id}`);
+
+      toast.success('Entregador apagada com sucesso!');
+      await updateDeliverymen();
+    } catch (err) {
+      toast.error('Esse entregador não pode ser deletado!');
+    }
   }
 
   return (
@@ -80,7 +98,10 @@ export default function Deliverymen() {
               onChange={e => setSearch(e.target.value)}
             />
           </div>
-          <button type="button" onClick={handleToggleComponent}>
+          <button
+            type="button"
+            onClick={() => history.push('/deliverymen/deliveryman')}
+          >
             <div className="add">
               <MdAdd size={20} color="FFF" />
               <span>CADASTRAR</span>
@@ -114,16 +135,34 @@ export default function Deliverymen() {
                   </td>
                   <td>{deliveryman.name}</td>
                   <td>{deliveryman.email}</td>
-                  <td className="actions">
-                    <Badge onClick={handleToggleVisible}>
-                      <MdMoreHoriz color="c6c6c6" size={15} />
-                    </Badge>
-
-                    {/* <DeliveryOptions visible={visible}>
-                    <button type="button">Visualizar</button>
-                    <button type="button">Editar</button>
-                    <button type="button">Excluir</button>
-                  </DeliveryOptions> */}
+                  <td>
+                    <More>
+                      <MoreContainer>
+                        <div>{/* <DeliveryView data={delivery} /> */}</div>
+                        <div>
+                          <button
+                            onClick={() =>
+                              history.push(
+                                `/deliverymen/deliveryman/${deliveryman.id}`
+                              )
+                            }
+                            type="button"
+                          >
+                            <MdEdit color="4D85EE" size={15} />
+                            <span>Editar</span>
+                          </button>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => handleDelete(deliveryman.id)}
+                            type="button"
+                          >
+                            <MdDeleteForever color="DE3B3B" size={15} />
+                            <span>Excluir</span>
+                          </button>
+                        </div>
+                      </MoreContainer>
+                    </More>
                   </td>
                 </tr>
                 <tr className="divisor" />

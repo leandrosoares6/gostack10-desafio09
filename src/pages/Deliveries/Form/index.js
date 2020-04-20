@@ -78,17 +78,33 @@ export default function UpdateForm({ match }) {
       return;
     }
 
-    await api
-      .post('deliveries', {
-        product,
-        recipient_id: recipientOption,
-        deliveryman_id: deliverymanOption,
-      })
-      .catch(() => {
-        toast.error('Erro interno na aplicação. Tente novamente mais tarde.');
-      });
+    let response = {};
 
-    toast.success('Produto cadastrado com sucesso!');
+    if (id) {
+      response = await api
+        .put(`deliveries/${id}`, {
+          product,
+          recipient_id: recipientOption,
+          deliveryman_id: deliverymanOption,
+        })
+        .catch(() => {
+          toast.error('Erro interno na aplicação. Tente novamente mais tarde.');
+        });
+    } else {
+      response = await api
+        .post('deliveries', {
+          product,
+          recipient_id: recipientOption,
+          deliveryman_id: deliverymanOption,
+        })
+        .catch(() => {
+          toast.error('Erro interno na aplicação. Tente novamente mais tarde.');
+        });
+    }
+
+    if (response.data) {
+      toast.success('Produto cadastrado com sucesso!');
+    }
 
     setDeliverymanOption('');
     setRecipientOption('');
